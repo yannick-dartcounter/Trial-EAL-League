@@ -8,7 +8,7 @@ st.set_page_config(page_title="European League Totaalstand", layout="wide")
 st.title("🏆 Total Ranking Test Trial EAL League")
 
 # 📁 Excelbestand ophalen vanaf GitHub
-url = "https://raw.githubusercontent.com/yannick-dartcounter/European-League/main/totaalstand_TEALT.xlsx"
+url = "https://raw.githubusercontent.com/yannick-dartcounter/Trial-EAL-League/main/totaalstand_TEALT.xlsx"
 
 @st.cache_data(ttl=60)
 def laad_excel_van_github(url):
