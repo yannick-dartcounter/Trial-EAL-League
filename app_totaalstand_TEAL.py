@@ -4,11 +4,11 @@ import requests
 from io import BytesIO
 from datetime import datetime
 
-st.set_page_config(page_title="European League Ranking", layout="wide")
-st.title("🏆 Total Ranking European League")
+st.set_page_config(page_title="European League Totaalstand", layout="wide")
+st.title("🏆 Total ranking – European League")
 
-# 📁 URL naar Excelbestand op GitHub
-url = "https://raw.githubusercontent.com/yannick-dartcounter/European-League/main/totaalstand_TEAL1_TEAL8.xlsx"
+# 📁 Excelbestand ophalen vanaf GitHub
+url = "https://raw.githubusercontent.com/yannick-dartcounter/European-League/main/totaalstand_EL1_EL8.xlsx"
 
 @st.cache_data(ttl=60)
 def laad_excel_van_github(url):
@@ -29,34 +29,33 @@ try:
         st.cache_data.clear()
         st.experimental_rerun()
 except Exception as e:
-    st.error("❌ Error loading Excel file:")
+    st.error("❌ Fout bij het laden van de totaaltabel:")
     st.exception(e)
     st.stop()
 
-# 🔧 Verwijder index en vertaal kolomnamen
-df.reset_index(drop=True, inplace=True)
+# ✅ Alleen gewenste kolommen selecteren en volgorde corrigeren
+df = df[[
+    "Rang", "Speler", "Score", "180'ers", "100+ finishes", "3-Darts Gemiddelde", "Totaal", "Winnaar"
+]]
+
+# 🔁 Kolomnamen hernoemen voor weergave
 df.rename(columns={
-    "Rang": "Rank",
+    "Rang": "Pos",
     "Speler": "Player",
-    "180'ers": "180's",
+    "Score": "Legs",
+    "180'ers": "180s",
+    "100+ finishes": "100+ finishes",
+    "3-Darts Gemiddelde": "3-Dart Avg",
     "Totaal": "Total",
-    "Winnaar": "Tournament wins"
+    "Winnaar": "Tournaments won"
 }, inplace=True)
 
-# 🚫 Verberg index (0,1,2...) in st.table
-df.index = [""] * len(df)
+# 📊 Tabel instellen en weergeven
+df.set_index("Pos", inplace=True)
+st.caption(f"📅 Laatste update: {last_updated.strftime('%d-%m-%Y %H:%M:%S')} UTC")
 
-# 🕒 Laatste update tonen
-st.caption(f"📅 Last updated: {last_updated.strftime('%d-%m-%Y %H:%M:%S')} UTC")
-
-# 📊 Toon de tabel zonder afkappen
-st.table(df)
-
-# 🔽 Downloadknop
-csv = df.to_csv(index=False).encode("utf-8")
-st.download_button(
-    label="📥 Download CSV",
-    data=csv,
-    file_name="ranking_european_league.csv",
-    mime="text/csv"
+st.dataframe(
+    df.style.format({"3-Dart Avg": "{:.2f}"}),
+    use_container_width=True,
+    height=len(df) * 35  # Dynamische hoogte per speler
 )
