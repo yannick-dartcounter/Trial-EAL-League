@@ -35,7 +35,8 @@ except Exception as e:
 
 # ✅ Alleen gewenste kolommen selecteren en volgorde corrigeren
 df = df[[
-    "Rang", "Speler", "Score", "180'ers", "100+ finishes", "3-Darts Gemiddelde", "Totaal", "Winnaar"
+    "Rang", "Speler", "Score", "180'ers", "100+ finishes", 
+    "3-Darts Gemiddelde", "Totaal", "Winnaar"
 ]]
 
 # 🔁 Kolomnamen hernoemen voor weergave
@@ -50,10 +51,15 @@ df.rename(columns={
     "Winnaar": "Tournaments won"
 }, inplace=True)
 
-# 📊 Tabel instellen en weergeven
+# 📊 Zet index en toon laatste update
 df.set_index("Pos", inplace=True)
 st.caption(f"📅 Laatste update: {last_updated.strftime('%d-%m-%Y %H:%M:%S')} UTC")
 
+# 🐞 DEBUG: Toon alle rijen waarin "Sion" voorkomt
+st.subheader("🔍 Debug: Is Sion aanwezig?")
+st.write(df[df["Player"].str.contains("Sion", case=False)])
+
+# 📊 Toon hele rankingtabel
 st.dataframe(
     df.style.format({"3-Dart Avg": "{:.2f}"}),
     use_container_width=True,
