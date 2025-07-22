@@ -4,11 +4,11 @@ import requests
 from io import BytesIO
 from datetime import datetime
 
-st.set_page_config(page_title="European League Totaalstand", layout="wide")
-st.title("🏆 Total ranking – European League")
+st.set_page_config(page_title="Trial EAL League Total ranking", layout="wide")
+st.title("🏆 Total ranking – Trial EAL League")
 
 # 📁 Excelbestand ophalen vanaf GitHub
-url = "https://raw.githubusercontent.com/yannick-dartcounter/European-League/main/totaalstand_EL1_EL8.xlsx"
+url = "https://raw.githubusercontent.com/yannick-dartcounter/Trial-EAL-League/main/totaalstand_TEAL1_TEAL5.xlsx"
 
 @st.cache_data(ttl=60)
 def laad_excel_van_github(url):
