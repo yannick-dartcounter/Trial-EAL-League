@@ -4,11 +4,11 @@ import requests
 from io import BytesIO
 from datetime import datetime
 
-st.set_page_config(page_title="Trial EAL League Total ranking", layout="wide")
+st.set_page_config(page_title="European League Totaalstand", layout="wide")
 st.title("🏆 Total ranking – Trial EAL League")
 
 # 📁 Excelbestand ophalen vanaf GitHub
-url = "https://raw.githubusercontent.com/yannick-dartcounter/Trial-EAL-League/main/totaalstand_TEAL1_TEAL5.xlsx"
+url = "https://raw.githubusercontent.com/yannick-dartcounter/Trial-EAL-League//main/totaalstand_TEAL1_TEAL5.xlsx"
 
 @st.cache_data(ttl=60)
 def laad_excel_van_github(url):
@@ -33,16 +33,13 @@ except Exception as e:
     st.exception(e)
     st.stop()
 
-# ✅ Alleen gewenste kolommen selecteren, maar veilig
-benodigde_kolommen = [
-    "Rang", "Speler", "Score", "180'ers", "100+ finishes",
-    "3-Darts Gemiddelde", "Totaal", "Winnaar"
-]
-beschikbare_kolommen = [col for col in benodigde_kolommen if col in df.columns]
-df = df[beschikbare_kolommen]
+# ✅ Alleen gewenste kolommen selecteren en volgorde corrigeren
+df = df[[
+    "Rang", "Speler", "Score", "180'ers", "100+ finishes", "3-Darts Gemiddelde", "Totaal", "Winnaar"
+]]
 
 # 🔁 Kolomnamen hernoemen voor weergave
-kolom_naam_map = {
+df.rename(columns={
     "Rang": "Pos",
     "Speler": "Player",
     "Score": "Legs",
@@ -51,19 +48,12 @@ kolom_naam_map = {
     "3-Darts Gemiddelde": "3-Dart Avg",
     "Totaal": "Total",
     "Winnaar": "Tournaments won"
-}
-df.rename(columns={k: v for k, v in kolom_naam_map.items() if k in df.columns}, inplace=True)
+}, inplace=True)
 
-# 📊 Zet index en toon laatste update
-if "Pos" in df.columns:
-    df.set_index("Pos", inplace=True)
-
+# 📊 Tabel instellen en weergeven
+df.set_index("Pos", inplace=True)
 st.caption(f"📅 Laatste update: {last_updated.strftime('%d-%m-%Y %H:%M:%S')} UTC")
 
-# 👀 Debug: laat zien of Sion erin staat
-# st.write("Sion aanwezig:", df["Player"].str.contains("Sion", case=False).any())  # optioneel
-
-# 📊 Toon de rankingtabel
 st.dataframe(
     df.style.format({"3-Dart Avg": "{:.2f}"}),
     use_container_width=True,
