@@ -55,11 +55,7 @@ df.rename(columns={
 df.set_index("Pos", inplace=True)
 st.caption(f"📅 Laatste update: {last_updated.strftime('%d-%m-%Y %H:%M:%S')} UTC")
 
-# 🐞 DEBUG: Toon alle rijen waarin "Sion" voorkomt
-st.subheader("🔍 Debug: Is Sion aanwezig?")
-st.write(df[df["Player"].str.contains("Sion", case=False)])
-
-# 📊 Toon hele rankingtabel
+# 📊 Toon de rankingtabel
 st.dataframe(
     df.style.format({"3-Dart Avg": "{:.2f}"}),
     use_container_width=True,
