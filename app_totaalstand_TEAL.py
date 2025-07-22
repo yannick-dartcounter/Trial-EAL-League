@@ -8,7 +8,7 @@ st.set_page_config(page_title="European League Totaalstand", layout="wide")
 st.title("🏆 Total ranking – Trial EAL League")
 
 # 📁 Excelbestand ophalen vanaf GitHub
-url = "https://raw.githubusercontent.com/yannick-dartcounter/Trial-EAL-League//main/totaalstand_TEAL1_TEAL5.xlsx"
+url = "https://raw.githubusercontent.com/yannick-dartcounter/Trial-EAL-League/main/totaalstand_TEAL1_TEAL5.xlsx"
 
 @st.cache_data(ttl=60)
 def laad_excel_van_github(url):
@@ -54,8 +54,7 @@ df.rename(columns={
 df.set_index("Pos", inplace=True)
 st.caption(f"📅 Laatste update: {last_updated.strftime('%d-%m-%Y %H:%M:%S')} UTC")
 
-st.dataframe(
-    df.style.format({"3-Dart Avg": "{:.2f}"}),
-    use_container_width=True,
-    height=len(df) * 35  # Dynamische hoogte per speler
+# 📋 Toon tabel zonder scroll
+st.table(
+    df.style.format({"3-Dart Avg": "{:.2f}"})
 )
