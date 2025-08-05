@@ -10,7 +10,7 @@ st.title("🏆 Total ranking – Trial EAL League")
 # 📁 Excelbestand ophalen vanaf GitHub
 url = "https://raw.githubusercontent.com/yannick-dartcounter/Trial-EAL-League/main/totaalstand_TEAL1_TEAL5.xlsx"
 
-@st.cache_data(ttl=60)
+@st.cache_data(ttl=10)
 def laad_excel_van_github(url):
     response = requests.get(url)
     response.raise_for_status()
@@ -58,3 +58,4 @@ st.caption(f"📅 Laatste update: {last_updated.strftime('%d-%m-%Y %H:%M:%S')} U
 st.table(
     df.style.format({"3-Dart Avg": "{:.2f}"})
 )
+
